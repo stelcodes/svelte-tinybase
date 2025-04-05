@@ -23,7 +23,8 @@
     "test:e2e": "playwright test"
   },
   "files": [
-    "dist",
+    "dist/index.*",
+    "dist/tinybase/*",
     "!dist/**/*.test.*",
     "!dist/**/*.spec.*"
   ],
