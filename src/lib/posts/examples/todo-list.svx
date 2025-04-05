@@ -1,0 +1,16 @@
+---
+title: TODO List Demo with Svelte 5 and Tinybase
+description: A demo of a TODO list using Svelte 5 and Tinybase
+lastUpdate: 2025-04-05
+order: 1
+---
+
+<script lang="ts">
+  import TodoList from "$lib/demos/todo-list/TodoList.svelte";
+</script>
+
+## TODO List Demo with Svelte 5 and Tinybase
+
+This is a demo of a TODO list using Svelte 5 and Tinybase.
+
+<TodoList />

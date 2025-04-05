@@ -1,0 +1,12 @@
+---
+title: Introduction to svelte-tinybase
+description: A brief introduction to svelte-tinybase
+lastUpdate: 2025-04-05
+order: 1
+---
+
+svelte-tinybase is a library that allows you to use Tinybase with Svelte 5 in a reactive way.
+
+Tinybase is a lightweight database for the web. It's a simple, yet powerful tool for building web applications. It's really incredible, honestly. Only problem is that they only provide first-class support for React.
+
+So, this library is my attempt to bring the power of Tinybase to Svelte 5.
