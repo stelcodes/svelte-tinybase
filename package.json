@@ -2,6 +2,8 @@
   "name": "svelte-tinybase",
   "version": "0.0.1",
   "license": "MIT",
+  "repository": "https://github.com/polvallverdu/svelte-tinybase",
+  "homepage": "https://svelte-tinybase.polv.dev",
   "scripts": {
     "i18n": "paraglide-js compile --project project.inlang --outdir src/lib/paraglide",
     "dev": "vite dev",
