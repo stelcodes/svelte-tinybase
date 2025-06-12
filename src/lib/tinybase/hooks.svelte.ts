@@ -1,4 +1,4 @@
-import type { Id, OptionalSchemas, Row, Store, Table } from "tinybase/with-schemas";
+import type { Id, OptionalSchemas, Row, Store, Table, Tables } from "tinybase/with-schemas";
 import type { CellIdFromSchema, TableIdFromSchema } from "./types.js";
 
 /**
@@ -218,6 +218,69 @@ export function useValues<T extends OptionalSchemas>(store: Store<T>) {
     },
     set value(newValues) {
       store.setValues(newValues);
+    },
+  };
+}
+
+/**
+ * Creates a ProxyHandler for a TinyBase tables object that enables reactive
+ * updates when tables are modified. This handler intercepts property access and
+ * mutations to maintain synchronization with the store.
+ *
+ * @template T - The type of the store's schemas
+ * @param store - The TinyBase store instance
+ * @returns A ProxyHandler that enables reactive tables operations
+ */
+function createTablesHandler<T extends OptionalSchemas>(
+  store: Store<T>,
+): ProxyHandler<Tables<T[0], false>> {
+  return {
+    get(target, prop, receiver) {
+      const val = Reflect.get(target, prop, receiver);
+      if (!val) return val;
+
+      const handler = createTableHandler(store, prop as Id);
+      return new Proxy(val, handler);
+    },
+    set(_, prop, value) {
+      if (typeof prop !== "string") {
+        throw new Error("Tables property must be a string");
+      }
+
+      store.setTable(prop, value);
+      return true;
+    },
+  };
+}
+
+/**
+ * Creates a reactive hook for accessing all TinyBase tables for a given store.
+ * The returned object provides a reactive proxy to the tables data that
+ * automatically updates when the underlying store changes.
+ *
+ * @template T - The type of the store's schemas
+ * @param store - The TinyBase store instance
+ * @returns An object with a reactive value property that provides access to all tables
+ */
+export function useTables<T extends OptionalSchemas>(store: Store<T>) {
+  let tables = $state(store.getTables());
+
+  $effect(() => {
+    const listener = store.addTablesListener(() => {
+      tables = store.getTables();
+    });
+
+    return () => {
+      store.delListener(listener);
+    };
+  });
+
+  return {
+    get value() {
+      return new Proxy(tables, createTablesHandler(store));
+    },
+    set value(value) {
+      store.setTables(value);
     },
   };
 }
